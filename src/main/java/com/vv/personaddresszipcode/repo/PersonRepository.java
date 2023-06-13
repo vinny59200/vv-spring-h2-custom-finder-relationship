@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
+//chatgpt assistance: https://chat.openai.com/share/f07b6c75-8955-4f59-b50d-5a87d17f7735
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findByAddressZipCode(String zipCode);
