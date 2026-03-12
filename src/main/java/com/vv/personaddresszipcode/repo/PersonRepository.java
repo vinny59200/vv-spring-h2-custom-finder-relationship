@@ -6,16 +6,27 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
-//chatgpt assistance: https://chat.openai.com/share/f07b6c75-8955-4f59-b50d-5a87d17f7735
+// Marks this interface as a Spring Data repository.
+// In many cases this annotation is optional because JpaRepository
+// implementations are detected automatically by Spring.
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    List<Person> findByAddressZipCode(String zipCode);
 
-    //List<Person> findByAddressWithZipCode(String zipCode); throws IllegalArgumentException
+    // Custom derived query method.
+    // Spring Data JPA interprets this method name as:
+    // find all Person entities where person.address.zipCode = given zipCode
+    List<Person> findByAddressZipCode( String zipCode );
 
-    List<Person> findByAddress_ZipCode(String zipCode);
+    // This method name is invalid for Spring Data JPA query derivation.
+    // "With" is not understood here as a property navigation keyword,
+    // so it would throw an IllegalArgumentException at runtime.
+    // List<Person> findByAddressWithZipCode(String zipCode);
 
-    //List<Person> findByAddress@ZipCode(String zipCode); does not compile
+    // Equivalent valid form using an underscore to make the nested
+    // property navigation more explicit:
+    // address -> zipCode
+    List<Person> findByAddress_ZipCode( String zipCode );
+
+    // This would not compile because '@' is not allowed in a Java method name.
+    // List<Person> findByAddress@ZipCode(String zipCode);
 }
-
